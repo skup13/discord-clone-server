@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# 💬 Discord Clone (Real-Time Chat Application)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A lightweight real-time chat application built with **React**, **Node.js**, **Express**, and **Socket.io**. This application allows users to choose a custom username, join isolated chat rooms (`#general` and `#lounge`), broadcast live messages, and automatically sync chat history upon entering a channel.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+- **Username Gate:** Simple authentication screen allowing users to set a custom chat display name before entering.
+- **Dynamic Channel Switching:** Instant navigation between dedicated chat rooms (`#general` and `#lounge`).
+- **Room-Isolated Broadcasting:** Messages are broadcast using Socket.io rooms, ensuring users only see messages sent within their active channel.
+- **In-Memory Chat History:** The Node.js server persists chat logs per room, automatically serving previous message histories when a client switches rooms.
+- **Live Timestamps & Authors:** Real-time payload generation formatting author names, messages, and timestamps (`HH:MM`).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Tech Stack
 
-### `npm test`
+- **Frontend:** React (Hooks, Socket.io-Client)
+- **Backend:** Node.js, Express
+- **Real-Time Engine:** Socket.io (WebSockets)
+- **Middleware:** CORS
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 📁 Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```text
+discord-clone-server/
+├── server.js               # Express server & Socket.io setup
+├── package.json            # Backend dependencies
+└── discord-clone-client/   # Nested client folder
+    ├── src/
+    │   ├── App.js          # React UI & Socket connection
+    │   └── index.js
+    └── package.json        # Frontend dependencies
+```
+---
+## 🚀 Local Setup & Installation
+### 1. Prerequisites
+Ensure you have Node.js (v16+) and npm installed.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone https://github.com/skup13/discord-clone-server.git
+cd discord-clone-server
+```
+### 2. Run the Backend Server
+Open a terminal tab and execute:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+node server.js
+```
+The server will start listening on http://localhost:5000.
 
-### `npm run eject`
+### 3. Run the Frontend Client
+Open a second terminal tab and execute:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd discord-clone-client
+npm start
+```
+The React development server will start and open http://localhost:3000 in your default browser.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🔑 Technical Architecture & Socket Events
+1. join_room: Triggered when a client switches channels. The server removes the client from existing rooms, joins the target socket room, and emits load_history.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. load_history: Sends the array of stored room messages directly to the joining socket.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+3. send_message: Emitted when a client submits a message. The server pushes the payload to the server-side memory (chatHistory) and broadcasts receive_message to all connected clients in that specific room via io.to(room).
