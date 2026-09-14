@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
 // Connect single socket instance
-const socket = io.connect('http://localhost:5000');
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:5000";
+const socket = io(SERVER_URL);
+
 
 function App() {
   const [username, setUsername] = useState('');
