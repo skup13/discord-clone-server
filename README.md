@@ -3,7 +3,11 @@
 A lightweight real-time chat application built with **React**, **Node.js**, **Express**, and **Socket.io**. This application allows users to choose a custom username, join isolated chat rooms (`#general` and `#lounge`), broadcast live messages, and automatically sync chat history upon entering a channel.
 
 ---
+## 🚀 Live Demo
 
+- **Live URL:** https://discord-clone-server-liart.vercel.app/
+
+---
 ## ✨ Features
 
 - **Username Gate:** Simple authentication screen allowing users to set a custom chat display name before entering.
